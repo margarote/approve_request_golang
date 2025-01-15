@@ -2,10 +2,35 @@ package approverequest
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 )
+
+type CodeData struct {
+	Code      string
+	Timestamp int64
+}
+
+func GenerateCodeWithTimestamp(secretKey string, durationSeconds int64) CodeData {
+	// Calcula o timestamp final: tempo atual (em segundos) + duração informada
+	ts := time.Now().Unix() + durationSeconds
+
+	// Cria o HMAC usando SHA256 com a chave secreta e o valor numérico do timestamp convertido para string
+	h := hmac.New(sha256.New, []byte(secretKey))
+	h.Write([]byte(strconv.FormatInt(ts, 10)))
+	code := hex.EncodeToString(h.Sum(nil))
+
+	return CodeData{
+		Code:      code,
+		Timestamp: ts,
+	}
+}
 
 // SendValidationPost envia o código e o timestamp para o servidor,
 // acessando o endpoint https://{domain}/approve-request/validate-code.

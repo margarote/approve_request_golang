@@ -7,7 +7,11 @@ import (
 )
 
 func main() {
-	rsult, _ := approverequest.SendValidationPost(".s", "google.com", 1736972931)
+	secretKey := ""
+
+	data := approverequest.GenerateCodeWithTimestamp(secretKey, 30)
+
+	rsult, _ := approverequest.SendValidationPost(data.Code, "google.com", data.Timestamp)
 
 	log.Println(rsult)
 }

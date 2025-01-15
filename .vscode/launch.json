@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debugar",
+            "type": "go",
+            "request": "launch",
+            "program": "main.go",
+            "env": {
+                "DEBUG": "1", // Defina DEBUG como "1" para ativar o modo de depuração
+                "DB_URI": "mongodb://magaroti:MwgBsP3CW38Jn@159.223.146.156:1011",
+                // "DB_URI": "mongodb://magaroti:MwgBsP3CW38Jn@localhost:1011",
+                "DB": "production",
+                "ENV": "PROD",
+                "JWT_KEY": "dkjvcfjvfvfjvfgjbgbjfvkjfvlkfvnflkvn",
+                "IS_LOGGED_URL": "https://teraquiz.com/microservice.login/validate.token?token="
+            },
+            "mode": "auto",
+            "args": []
+        }
+    ]
+}
