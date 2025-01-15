@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -46,7 +47,9 @@ func SendValidationPost(code, domain string, timestamp int64) (bool, error) {
 	// Converte os dados para JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		return false, fmt.Errorf("erro ao gerar JSON: %v", err)
+		err = fmt.Errorf("erro ao gerar JSON: %v", err)
+		log.Println(err.Error())
+		return false, err
 	}
 
 	// Define a URL do endpoint (domínio e rota)
@@ -55,12 +58,14 @@ func SendValidationPost(code, domain string, timestamp int64) (bool, error) {
 	// Envia a requisição POST com o JSON gerado
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		return false, fmt.Errorf("erro ao enviar requisição: %v", err)
+		err = fmt.Errorf("erro ao enviar requisição: %v", err)
+		log.Println(err.Error())
+		return false, err
 	}
 	defer resp.Body.Close()
 
 	// Exibe o status da resposta (opcional)
-	fmt.Printf("Status da resposta: %s\n", resp.Status)
+	log.Printf("Status da resposta: %s\n", resp.Status)
 
 	// Decodifica a resposta do servidor (espera um JSON com o campo "valid")
 	var result struct {
@@ -68,7 +73,9 @@ func SendValidationPost(code, domain string, timestamp int64) (bool, error) {
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return false, fmt.Errorf("erro ao decodificar a resposta JSON: %v", err)
+		err = fmt.Errorf("erro ao decodificar a resposta JSON: %v", err)
+		log.Println(err.Error())
+		return false, err
 	}
 
 	return result.Valid, nil
