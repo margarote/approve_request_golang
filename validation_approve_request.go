@@ -1,4 +1,4 @@
-package validation_approve_request
+package approverequest
 
 import (
 	"bytes"
